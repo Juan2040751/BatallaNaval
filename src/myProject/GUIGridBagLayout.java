@@ -20,7 +20,7 @@ public class GUIGridBagLayout extends JFrame {
     private JPanel tableroPrincipal;
     private ModelGame modelGame;
     private Escucha escucha;
-    private JButton horizontal, vertical, iniciar, territorioEnemigo;
+    private JButton horizontal, vertical, iniciar, territorioEnemigo, volver;
     private int interfaz, posicionFlota;
     private JButton[][] tableroPosicionU, tableroPosicionM;
     private JTextArea cantidadFlotas, ayuda;
@@ -44,7 +44,7 @@ public class GUIGridBagLayout extends JFrame {
         //Default JFrame configuration
         this.setTitle("Batalla Naval");
         this.pack();
-        this.setResizable(true);
+        this.setResizable(false);
         this.setVisible(true);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -159,10 +159,7 @@ public class GUIGridBagLayout extends JFrame {
         constrains.anchor = GridBagConstraints.CENTER;
         panelEleccion.add(vertical, constrains);
 
-        /**
-         territorioEnemigo = new JButton("Territorio enemigo");
-         territorioEnemigo.addActionListener(escucha);
-         */
+
 
     }
 
@@ -187,6 +184,24 @@ public class GUIGridBagLayout extends JFrame {
                     tableroPosicion.add(tableroPosicionU[i][j], constrainsPosicion);
                 }
             }
+        } else if(interfaz == 2){
+            tableroPosicion.removeAll();
+            GridBagConstraints constrainsPosicion = new GridBagConstraints();
+            constrainsPosicion.weightx = 40;
+            constrainsPosicion.weighty = 40;
+            for (int i = 0; i < 10; i++) {
+                for (int j = 0; j < 10; j++) {
+                    tableroPosicionU[i][j] = new JButton();
+                    tableroPosicionU[i][j].setBackground(new Color(30, 124, 236));
+                    tableroPosicionU[i][j].setPreferredSize(new Dimension(40, 40));
+                    constrainsPosicion.gridx = i;
+                    constrainsPosicion.gridy = j;
+                    constrainsPosicion.gridwidth = 1;
+                    constrainsPosicion.fill = GridBagConstraints.NONE;
+                    constrainsPosicion.anchor = GridBagConstraints.CENTER;
+                    tableroPosicion.add(tableroPosicionU[i][j], constrainsPosicion);
+                }
+            }
         }
     }
 
@@ -195,15 +210,16 @@ public class GUIGridBagLayout extends JFrame {
      * @param matrix with the changes to be made
      */
     private void pintarTableroPosicion(String[][] matrix) {
-        if (interfaz == 1) {
-            for (int i = 0; i < 10; i++) {
-                for (int j = 0; j < 10; j++) {
-                    if (!matrix[i][j].equals("")) {
-                        tableroPosicionU[i][j].setIcon(new ImageIcon(getClass().getResource("/resources/barcos.fraccion/" + matrix[i][j] + ".png")));
-                    }
+
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                if (!matrix[i][j].equals("")) {
+                    tableroPosicionU[i][j].setIcon(new ImageIcon(getClass().getResource("/resources/barcos.fraccion/" + matrix[i][j] + ".png")));
                 }
+
             }
         }
+
         repaint();
         revalidate();
     }
@@ -229,8 +245,8 @@ public class GUIGridBagLayout extends JFrame {
         }
     }
 
-    private void pintarTableroPrincipal(String[][] matrixTabPrincipal){
-        if (interfaz == 1) {
+    public void pintarTableroPrincipal(String[][] matrixTabPrincipal){
+        if (interfaz == 2) {
             for (int i = 0; i < 10; i++) {
                 for (int j = 0; j < 10; j++) {
                     if (matrixTabPrincipal[i][j] != "") {
@@ -353,7 +369,7 @@ public class GUIGridBagLayout extends JFrame {
                             for (int j = 0; j < 10; j++) {
                                 if (tableroPosicionU[i][j] == e.getSource()) {
                                     //once found, it is checked to see if it can be added to the underlying positions
-                                    if (modelGame.posicionarflota(i, j, orientacion, tipoFlota)) {
+                                    if (modelGame.ingresarBarcoUsuario(i, j, orientacion, tipoFlota)) {
                                         pintarTableroPosicion(modelGame.getTableroPosUsuario());
                                         if (cantidadFlota[posicionFlota] == 0) {
                                             posicionFlota++;
@@ -382,6 +398,8 @@ public class GUIGridBagLayout extends JFrame {
                                                 panelDerecho.add(ayuda, constrains);
 
                                                 interfaz = 2;
+
+                                                modelGame.ingresarBarcosMaquina();
                                             }
                                         }
 
@@ -425,6 +443,28 @@ public class GUIGridBagLayout extends JFrame {
                 constrains.anchor = GridBagConstraints.CENTER;
                 territorioEnemigo.addActionListener(escucha);
                 panelIzquierdo.add(territorioEnemigo,constrains);
+
+                volver = new JButton("Volver atras");
+                volver.setVisible(false);
+                constrains.gridx = 0;
+                constrains.gridy = 1;
+                constrains.gridwidth = 1;
+                constrains.fill = GridBagConstraints.NONE;
+                constrains.anchor = GridBagConstraints.CENTER;
+                volver.addActionListener(escucha);
+                panelIzquierdo.add(volver,constrains);
+            }
+            else if (e.getSource() == territorioEnemigo){
+                territorioEnemigo.setVisible(false);
+                volver.setVisible(true);
+                pintarTableroPosicion();
+                pintarTableroPosicion(modelGame.getTableroPosMaquina());
+            }
+            else if(e.getSource() == volver){
+                volver.setVisible(false);
+                territorioEnemigo.setVisible(true);
+                pintarTableroPosicion();
+                pintarTableroPosicion(modelGame.getTableroPosUsuario());
             }
         }
     }

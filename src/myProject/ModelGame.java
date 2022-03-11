@@ -1,8 +1,9 @@
 package myProject;
 
 public class ModelGame {
-    private String[][] tableroPosUsuario;
+    private String[][] tableroPosUsuario, tableroPosMaquina;
     private String error;
+    private Machine machine;
 
     public ModelGame() {
         //initializes the matrix to "" to paint the representing button as water
@@ -13,6 +14,18 @@ public class ModelGame {
             }
         }
 
+        tableroPosMaquina= new String[10][10];
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                tableroPosMaquina[i][j]="";
+            }
+        }
+
+        machine = new Machine();
+    }
+
+    public boolean ingresarBarcoUsuario(int posicionHorizontal,int posicionVertical,String alineacion, String barco){
+        return posicionarflota(tableroPosUsuario,posicionHorizontal,posicionVertical,alineacion,barco);
     }
 
     /**
@@ -23,7 +36,7 @@ public class ModelGame {
      * @param barco vessel name to add
      * @return whether it is possible or not
      */
-    public boolean posicionarflota(int posicionHorizontal,int posicionVertical,String alineacion, String barco){
+    private boolean posicionarflota(String[][] matrix,int posicionHorizontal,int posicionVertical,String alineacion, String barco){
         boolean answer=false;
         int espacio=0;
         switch (barco){
@@ -33,7 +46,7 @@ public class ModelGame {
             case "fragata"-> espacio=1;
         }
         //checks if the initial position (marked by the user) is empty
-        if (!tableroPosUsuario[posicionHorizontal][posicionVertical].equals("")){
+        if (!matrix[posicionHorizontal][posicionVertical].equals("")){
             answer=false;
             error="esta posicion ya esta en uso";
         }
@@ -46,14 +59,14 @@ public class ModelGame {
             }else {
                 for (int i = posicionHorizontal; i < posicionHorizontal + espacio; i++) {
                     //check that all positions where the boat would be are empty.
-                    if(!tableroPosUsuario[i][posicionVertical].equals("")){
+                    if(!matrix[i][posicionVertical].equals("")){
                         answer=false;
                         error="una de las posiciones que ocuparia tu "+barco+" ya esta en uso.";
                     }
                     //after having carried out all the revisions, it is verified that the boat can be added.
                     else if(i== posicionHorizontal + espacio-1){
                         answer=true;
-                        setTableroPosUsuario(posicionHorizontal, posicionVertical, alineacion, barco, espacio);
+                        setTableroPosicion(matrix,posicionHorizontal, posicionVertical, alineacion, barco, espacio);
                     }
                 }
             }
@@ -67,20 +80,21 @@ public class ModelGame {
             }else {
                 for (int i = posicionVertical; i < posicionVertical + espacio; i++) {
                     //check that all positions where the boat would be are empty.
-                    if(!tableroPosUsuario[posicionHorizontal][i].equals("")){
+                    if(!matrix[posicionHorizontal][i].equals("")){
                         answer=false;
                         error="una de las posiciones que ocuparia tu "+barco+" ya esta en uso.";
                     }
                     //after having carried out all the revisions, it is verified that the boat can be added.
                     else if(i== posicionVertical + espacio-1){
                         answer=true;
-                        setTableroPosUsuario(posicionHorizontal, posicionVertical, alineacion, barco, espacio);
+                        setTableroPosicion(matrix,posicionHorizontal, posicionVertical, alineacion, barco, espacio);
                     }
                 }
             }
         }
         return answer;
     }
+
 
     /**
      * start adding the boat in the indicated position and alignment
@@ -90,17 +104,17 @@ public class ModelGame {
      * @param barco vessel name to add
      * @param espacio space occupied by the ship
      */
-    private void setTableroPosUsuario(int posicionHorizontal,int posicionVertical,String alineacion, String barco,int espacio) {
+    private void setTableroPosicion(String[][] matrix,int posicionHorizontal,int posicionVertical,String alineacion, String barco,int espacio) {
         int contador=1;
         if (alineacion.equals("horizontal")){
             for (int i = posicionHorizontal; i < posicionHorizontal + espacio; i++) {
-                tableroPosUsuario[i][posicionVertical]=barco+".H."+contador;
+                matrix[i][posicionVertical]=barco+".H."+contador;
                 contador++;
             }
         }
         else{
             for (int i = posicionVertical; i < posicionVertical + espacio; i++) {
-                tableroPosUsuario[posicionHorizontal][i]=barco+".V."+contador;
+                matrix[posicionHorizontal][i]=barco+".V."+contador;
                 contador++;
             }
         }
@@ -118,5 +132,18 @@ public class ModelGame {
      */
     public String getError(){
         return error;
+    }
+
+
+    public void ingresarBarcosMaquina(){
+        for (int i = 0; i <10 ; i++) {
+            String barcoMaquina = machine.getBarco();
+            while(!posicionarflota(tableroPosMaquina, machine.getCoordenadaX(), machine.getCoordenadaY(), machine.getOrientacion(), barcoMaquina)){
+            }
+        }
+    }
+
+    public String[][] getTableroPosMaquina() {
+        return tableroPosMaquina;
     }
 }
