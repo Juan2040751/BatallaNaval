@@ -131,7 +131,9 @@ public class GUIGridBagLayout extends JFrame {
 
         pintarOpcionAlineacion();
         horizontal.addActionListener(escucha);
-        horizontal.setBackground(null);
+        horizontal.setBackground(new Color(221, 244, 252));
+
+        horizontal.setBorderPainted(false);
         constrains.gridx = 0;
         constrains.gridy = 1;
         constrains.gridwidth = 1;
@@ -151,7 +153,8 @@ public class GUIGridBagLayout extends JFrame {
         panelEleccion.add(ayuda, constrains);
 
         vertical.addActionListener(escucha);
-        vertical.setBackground(null);
+        vertical.setBackground(new Color(221, 244, 252));
+        vertical.setBorderPainted(false);
         constrains.gridx = 1;
         constrains.gridy = 1;
         constrains.gridwidth = 1;
@@ -435,7 +438,7 @@ public class GUIGridBagLayout extends JFrame {
                 panelDerecho.add(tableroPrincipal, constrains);
                 pintarTableroPrincipal();
 
-                territorioEnemigo = new JButton("Territorio enemigo");
+                territorioEnemigo = new JButton("Ver territorio enemigo");
                 constrains.gridx = 0;
                 constrains.gridy = 1;
                 constrains.gridwidth = 1;
@@ -444,7 +447,7 @@ public class GUIGridBagLayout extends JFrame {
                 territorioEnemigo.addActionListener(escucha);
                 panelIzquierdo.add(territorioEnemigo,constrains);
 
-                volver = new JButton("Volver atras");
+                volver = new JButton("Volver a tu territorio");
                 volver.setVisible(false);
                 constrains.gridx = 0;
                 constrains.gridy = 1;
