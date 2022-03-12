@@ -226,7 +226,7 @@ public class GUIGridBagLayout extends JFrame {
 
     private void pintarTableroPrincipal(){
         if(interfaz == 2){
-            addEscucha(tableroPosicionM);
+            //addEscucha(tableroPosicionM);
             GridBagConstraints constrainsPosicionDerecha = new GridBagConstraints();
             constrainsPosicionDerecha.weightx = 40;
             constrainsPosicionDerecha.weighty = 40;
@@ -243,6 +243,8 @@ public class GUIGridBagLayout extends JFrame {
                     tableroPrincipal.add(tableroPosicionM[i][j], constrainsPosicionDerecha);
                 }
             }
+            addEscucha(tableroPosicionM);
+
         }
     }
 
@@ -472,7 +474,7 @@ public class GUIGridBagLayout extends JFrame {
                 for (int i = 0; i < 10; i++) {
                     for (int j = 0; j < 10; j++) {
                         if (e.getSource() == tableroPosicionM[i][j]) {
-
+                            System.out.println("Tocado");
                         }
                     }
                 }
