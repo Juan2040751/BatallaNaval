@@ -226,6 +226,7 @@ public class GUIGridBagLayout extends JFrame {
 
     private void pintarTableroPrincipal(){
         if(interfaz == 2){
+            addEscucha(tableroPosicionM);
             GridBagConstraints constrainsPosicionDerecha = new GridBagConstraints();
             constrainsPosicionDerecha.weightx = 40;
             constrainsPosicionDerecha.weighty = 40;
@@ -444,7 +445,7 @@ public class GUIGridBagLayout extends JFrame {
                 territorioEnemigo.addActionListener(escucha);
                 panelIzquierdo.add(territorioEnemigo,constrains);
 
-                volver = new JButton("Volver atras");
+                volver = new JButton("Tu territorio");
                 volver.setVisible(false);
                 constrains.gridx = 0;
                 constrains.gridy = 1;
@@ -454,17 +455,28 @@ public class GUIGridBagLayout extends JFrame {
                 volver.addActionListener(escucha);
                 panelIzquierdo.add(volver,constrains);
             }
-            else if (e.getSource() == territorioEnemigo){
-                territorioEnemigo.setVisible(false);
-                volver.setVisible(true);
-                pintarTableroPosicion();
-                pintarTableroPosicion(modelGame.getTableroPosMaquina());
+            else if(interfaz==2) {
+            if (e.getSource() == territorioEnemigo) {
+                    territorioEnemigo.setVisible(false);
+                    volver.setVisible(true);
+                    pintarTableroPosicion();
+                    pintarTableroPosicion(modelGame.getTableroPosMaquina());
             }
-            else if(e.getSource() == volver){
-                volver.setVisible(false);
-                territorioEnemigo.setVisible(true);
-                pintarTableroPosicion();
-                pintarTableroPosicion(modelGame.getTableroPosUsuario());
+            else if (e.getSource() == volver) {
+                    volver.setVisible(false);
+                    territorioEnemigo.setVisible(true);
+                    pintarTableroPosicion();
+                    pintarTableroPosicion(modelGame.getTableroPosUsuario());
+                }
+            else{
+                for (int i = 0; i < 10; i++) {
+                    for (int j = 0; j < 10; j++) {
+                        if (e.getSource() == tableroPosicionM[i][j]) {
+
+                        }
+                    }
+                }
+            }
             }
         }
     }

@@ -1,7 +1,7 @@
 package myProject;
 
 public class ModelGame {
-    private String[][] tableroPosUsuario, tableroPosMaquina;
+    private String[][] tableroPosUsuario, tableroPosMaquina, posicionDisparos;
     private String error;
     private Machine machine;
 
