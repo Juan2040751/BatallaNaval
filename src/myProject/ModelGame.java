@@ -146,4 +146,9 @@ public class ModelGame {
     public String[][] getTableroPosMaquina() {
         return tableroPosMaquina;
     }
+    private void setTocadoTPEnemigo(String[][] matrix, int posicionH, int posicionV){
+        String informacionBarco =matrix[posicionH][posicionV];
+        String barcoTocado=informacionBarco.substring(0,informacionBarco.indexOf("."))+".T"+informacionBarco.substring(informacionBarco.indexOf("."));
+        informacionBarco=barcoTocado;
+    }
 }
