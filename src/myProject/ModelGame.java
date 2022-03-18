@@ -133,6 +133,17 @@ public class ModelGame {
             }
         }
     }
+    private void setTableroPosicion(String[][] matrix,String opcionAPintar,int disparoX,int disparoY){
+        /**
+         *  String informacionBarco =matrix[posicionH][posicionV];
+         *         String barcoTocado=informacionBarco.substring(0,informacionBarco.indexOf("."))+".T"+informacionBarco.substring(informacionBarco.indexOf("."));informacionBarco=barcoTocado;
+         *
+         */
+        if(opcionAPintar.equals("agua")){
+            matrix[disparoX][disparoY]="agua";
+        }
+    }
+
 
     /**
      * @return the matrix with the information of where the user's fleet is positioned.
@@ -164,6 +175,7 @@ public class ModelGame {
     public void setTableroInfPrincipalU(int disparoX, int disparoY){
         if(tableroPosMaquina[disparoX][disparoY].equals("")){
             tableroInfPrincipalU[disparoX][disparoY]="agua";
+            setTableroPosicion(tableroPosMaquina,"agua",disparoX,disparoY);
         }
         else {
             //trabajar aqui
@@ -178,4 +190,5 @@ public class ModelGame {
     public String[][] getTableroInfPrincipalU() {
         return tableroInfPrincipalU;
     }
+
 }
