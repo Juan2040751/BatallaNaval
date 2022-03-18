@@ -1,7 +1,7 @@
 package myProject;
 
 public class ModelGame {
-    private String[][] tableroPosUsuario, tableroPosMaquina;
+    private String[][] tableroPosUsuario, tableroPosMaquina, tableroInfPrincipalU, tableroInfPrincipalM;
     private String error;
     private Machine machine;
 
@@ -22,6 +22,20 @@ public class ModelGame {
         }
 
         machine = new Machine();
+
+        tableroInfPrincipalU= new String[10][10];
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                tableroInfPrincipalU[i][j]="";
+            }
+        }
+
+        tableroInfPrincipalM= new String[10][10];
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                tableroInfPrincipalM[i][j]="";
+            }
+        }
     }
 
     public boolean ingresarBarcoUsuario(int posicionHorizontal,int posicionVertical,String alineacion, String barco){
@@ -145,5 +159,23 @@ public class ModelGame {
 
     public String[][] getTableroPosMaquina() {
         return tableroPosMaquina;
+    }
+
+    public void setTableroInfPrincipalU(int disparoX, int disparoY){
+        if(tableroPosMaquina[disparoX][disparoY].equals("")){
+            tableroInfPrincipalU[disparoX][disparoY]="agua";
+        }
+        else {
+            //trabajar aqui
+        }
+
+    }
+/**
+    public void setTableroInfPrincipalM(String[][] tableroInfPrincipalM) {
+        this.tableroInfPrincipalM = tableroInfPrincipalM;
+    }
+**/
+    public String[][] getTableroInfPrincipalU() {
+        return tableroInfPrincipalU;
     }
 }

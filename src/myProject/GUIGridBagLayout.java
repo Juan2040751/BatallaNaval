@@ -21,8 +21,8 @@ public class GUIGridBagLayout extends JFrame {
     private ModelGame modelGame;
     private Escucha escucha;
     private JButton horizontal, vertical, iniciar, territorioEnemigo, volver;
-    private int interfaz, posicionFlota;
-    private JButton[][] tableroPosicionU, tableroPosicionM;
+    private int interfaz, posicionFlota, disparoX, disparoY;
+    private JButton[][] tableroPosicionU, tableroPrincipalU;
     private JTextArea cantidadFlotas, ayuda;
     private int[] cantidadFlota;
     private String[] nombreFlota;
@@ -35,7 +35,7 @@ public class GUIGridBagLayout extends JFrame {
     public GUIGridBagLayout() {
         interfaz = 0;
         tableroPosicionU = new JButton[10][10];
-        tableroPosicionM = new JButton[10][10];
+        tableroPrincipalU = new JButton[10][10];
         posicionFlota = 0;
         nombreFlota = new String[]{"Portaaviones", "Submarinos", "Destructores", "Fragatas"};
         cantidadFlota = new int[]{1, 2, 3, 4};
@@ -162,8 +162,6 @@ public class GUIGridBagLayout extends JFrame {
         constrains.anchor = GridBagConstraints.CENTER;
         panelEleccion.add(vertical, constrains);
 
-
-
     }
 
     /**
@@ -234,15 +232,15 @@ public class GUIGridBagLayout extends JFrame {
             constrainsPosicionDerecha.weighty = 40;
             for(int i=0; i<10; i++){
                 for(int j=0; j<10; j++){
-                    tableroPosicionM[i][j] = new JButton();
-                    tableroPosicionM[i][j].setBackground(new Color(30, 124, 236));
-                    tableroPosicionM[i][j].setPreferredSize(new Dimension(40, 40));
+                    tableroPrincipalU[i][j] = new JButton();
+                    tableroPrincipalU[i][j].setBackground(new Color(30, 124, 236));
+                    tableroPrincipalU[i][j].setPreferredSize(new Dimension(40, 40));
                     constrainsPosicionDerecha.gridx = i;
                     constrainsPosicionDerecha.gridy = j;
                     constrainsPosicionDerecha.gridwidth = 1;
                     constrainsPosicionDerecha.fill = GridBagConstraints.NONE;
                     constrainsPosicionDerecha.anchor = GridBagConstraints.CENTER;
-                    tableroPrincipal.add(tableroPosicionM[i][j], constrainsPosicionDerecha);
+                    tableroPrincipal.add(tableroPrincipalU[i][j], constrainsPosicionDerecha);
                 }
             }
         }
@@ -253,7 +251,7 @@ public class GUIGridBagLayout extends JFrame {
             for (int i = 0; i < 10; i++) {
                 for (int j = 0; j < 10; j++) {
                     if (matrixTabPrincipal[i][j] != "") {
-                        tableroPosicionM[i][j].setIcon(new ImageIcon(getClass().getResource("/resources/disparos/" + matrixTabPrincipal[i][j] + ".png")));
+                        tableroPrincipalU[i][j].setIcon(new ImageIcon(getClass().getResource("/resources/disparos/" + matrixTabPrincipal[i][j] + ".png")));
                     }
                 }
             }
@@ -456,18 +454,33 @@ public class GUIGridBagLayout extends JFrame {
                 constrains.anchor = GridBagConstraints.CENTER;
                 volver.addActionListener(escucha);
                 panelIzquierdo.add(volver,constrains);
+
+                addEscucha(tableroPrincipalU);
             }
-            else if (e.getSource() == territorioEnemigo){
-                territorioEnemigo.setVisible(false);
-                volver.setVisible(true);
-                pintarTableroPosicion();
-                pintarTableroPosicion(modelGame.getTableroPosMaquina());
-            }
-            else if(e.getSource() == volver){
-                volver.setVisible(false);
-                territorioEnemigo.setVisible(true);
-                pintarTableroPosicion();
-                pintarTableroPosicion(modelGame.getTableroPosUsuario());
+            else if (interfaz == 2){
+                if (e.getSource() == territorioEnemigo){
+                    territorioEnemigo.setVisible(false);
+                    volver.setVisible(true);
+                    pintarTableroPosicion();
+                    pintarTableroPosicion(modelGame.getTableroPosMaquina());
+                }
+                else if(e.getSource() == volver){
+                    volver.setVisible(false);
+                    territorioEnemigo.setVisible(true);
+                    pintarTableroPosicion();
+                    pintarTableroPosicion(modelGame.getTableroPosUsuario());
+                }
+                else{
+                    for (int i = 0; i < 10 ; i++) {
+                        for (int j = 0; j < 10; j++) {
+                            if(e.getSource() == tableroPrincipalU[i][j]){
+                                modelGame.setTableroInfPrincipalU(i,j);
+                                pintarTableroPrincipal(modelGame.getTableroInfPrincipalU());
+                            }
+
+                        }
+                    }
+                }
             }
         }
     }
