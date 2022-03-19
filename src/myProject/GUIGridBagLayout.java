@@ -55,6 +55,7 @@ public class GUIGridBagLayout extends JFrame {
      * create Listener and control Objects used for the GUI class
      */
     private void initGUI() {
+
         //Set up JFrame Container's Layout
         this.getContentPane().setLayout(new GridBagLayout());
         constrains = new GridBagConstraints();
