@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class Machine {
     private String[] flota;
-    private int estaFlota;
+    private int estaFlota,disparoX,disparoY;
 
     public Machine() {
         flota = new String[]{"portaaviones","submarino","submarino","destructor","destructor","destructor","fragata","fragata","fragata","fragata"};
@@ -32,6 +32,16 @@ public class Machine {
     }
 
     public int getCoordenadaY(){
+        Random random = new Random();
+        return random.nextInt(0,10);
+    }
+    public void prepararDisparo(String[][] matrix){
+    }
+    public int getDisparoX(){
+        Random random = new Random();
+        return random.nextInt(0,10);
+    }
+    public int getDisparoY(){
         Random random = new Random();
         return random.nextInt(0,10);
     }
