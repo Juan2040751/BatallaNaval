@@ -38,6 +38,15 @@ public class ModelGame {
         }
     }
 
+    /**
+     * checks if it's posible to enter the ship in the position chosen by the user
+     *
+     * @param posicionHorizontal
+     * @param posicionVertical
+     * @param alineacion
+     * @param barco
+     * @return whether it's possible to enter the ship or not
+     */
     public boolean ingresarBarcoUsuario(int posicionHorizontal, int posicionVertical, String alineacion, String barco) {
         return posicionarflota(tableroPosUsuario, posicionHorizontal, posicionVertical, alineacion, barco);
     }
@@ -141,7 +150,9 @@ public class ModelGame {
         return error;
     }
 
-
+    /**
+     *
+     */
     public void ingresarBarcosMaquina() {
         for (int i = 0; i < 10; i++) {
             String barcoMaquina = machine.getBarco();
@@ -224,7 +235,11 @@ public class ModelGame {
         }
         else{
             String primerClick =tableroPosMaquina[disparoX][disparoY];
-            if (!primerClick.substring(primerClick.indexOf(".")+1,primerClick.indexOf(".")+2).equals("T")){
+            if (primerClick.substring(primerClick.indexOf(".")+1,primerClick.indexOf(".")+2).equals("T")){
+                sePuedeDisparar=false;
+            }
+            else if(!primerClick.equals("agua") && !primerClick.equals("hundido")){
+                System.out.println("1. "+primerClick);
                 tableroPosMaquina[disparoX][disparoY] = primerClick.substring(0,primerClick.indexOf("."))+".T"+primerClick.substring(primerClick.indexOf("."));
                 primerClick =tableroPosMaquina[disparoX][disparoY];
                 if (hundimiento(tableroPosMaquina,disparoX,disparoY,tableroInfPrincipalU)){
@@ -263,15 +278,71 @@ public class ModelGame {
                 sePuedeDisparar=false;
             }
         }
-        while (!setTableroInfPrincipalM(/*con la clase machine generar el disparo aleatorimente*/));
+
+        if (sePuedeDisparar){
+            while (!setTableroInfPrincipalM(machine.getDisparoX(), machine.getDisparoY())) {
+            }
+        }
+
         return sePuedeDisparar;
     }
 
-    //funcion responsable de los disparos de la maquina debe hacer lo mismo que su homologa setTableroInfPrincipalU
-    private boolean setTableroInfPrincipalM(/*recibe las coordenadas del disparo donde el computador va a disparar */) {
+    /**
+     * performs computer triggering
+     * @param disparoX horizontal position where the shot will be fired
+     * @param disparoY vertical position where the shot will be fired
+     * @return if the shot could be fired
+     */
+    private boolean setTableroInfPrincipalM(int disparoX, int disparoY) {
         boolean sePuedeDisparar=true;
-        //hace exactamente lo mismo que la otra, solo que cambian las matrices, ahora se debe pero revisar en la matrix de posicion de la maquina e ir guardando la informacion en la matrix pricipal del computador
+        if(tableroPosUsuario[disparoX][disparoY].equals("")){
+            tableroInfPrincipalM[disparoX][disparoY]="agua";
+            tableroPosUsuario[disparoX][disparoY] = "agua";
+        }
+        else{
+            String primerClick =tableroPosUsuario[disparoX][disparoY];
+            if (primerClick.substring(primerClick.indexOf(".")+1,primerClick.indexOf(".")+2).equals("T")){
+                sePuedeDisparar=false;
+            }
+            else if(!primerClick.equals("agua") && !primerClick.equals("hundido")) {
+                tableroPosUsuario[disparoX][disparoY] = primerClick.substring(0,primerClick.indexOf("."))+".T"+primerClick.substring(primerClick.indexOf("."));
+                primerClick = tableroPosUsuario[disparoX][disparoY];
+                if (hundimiento(tableroPosUsuario,disparoX,disparoY,tableroInfPrincipalM)){
+                    String tipoBarco = primerClick.substring(0,primerClick.indexOf("."));
+                    int espacio = getEspacio(tipoBarco);
+                    int ultimaPos;
+                    int parteBarco = Integer.valueOf(primerClick.substring(primerClick.lastIndexOf(".")+1));
 
+                    if (primerClick.substring(primerClick.indexOf(".") + 3, primerClick.indexOf(".") + 4).equals("H")){
+                        if (parteBarco==espacio){
+                            ultimaPos=disparoX;
+                        }else {
+                            ultimaPos=disparoX+espacio-parteBarco;
+                        }
+                        for (int i = 1; i <= espacio; i++) {
+                            tableroPosUsuario[ultimaPos - espacio + i][disparoY]= "hundido";
+                            tableroInfPrincipalM[ultimaPos - espacio + i][disparoY]= "hundido";
+                        }
+                    }else {
+                        if (parteBarco==espacio){
+                            ultimaPos=disparoY;
+                        }else {
+                            ultimaPos=disparoY+espacio-parteBarco;
+                        }
+                        for (int i = 1; i <= espacio; i++) {
+                            tableroPosUsuario[disparoX][ultimaPos - espacio + i]= "hundido";
+                            tableroInfPrincipalM[disparoX][ultimaPos - espacio + i]= "hundido";
+                        }
+                    }
+                }
+                else {
+                    tableroInfPrincipalM[disparoX][disparoY]="tocado";
+                }
+            }
+            else{
+                sePuedeDisparar=false;
+            }
+        }
         return sePuedeDisparar;
     }
 

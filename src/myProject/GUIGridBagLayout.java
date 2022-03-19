@@ -223,6 +223,9 @@ public class GUIGridBagLayout extends JFrame {
         revalidate();
     }
 
+    /**
+     * add the 100 buttons to tableroPrincipalU for the first time, when the interface is being created
+     */
     private void pintarTableroPrincipal(){
         if(interfaz == 2){
             GridBagConstraints constrainsPosicionDerecha = new GridBagConstraints();
@@ -244,6 +247,10 @@ public class GUIGridBagLayout extends JFrame {
         }
     }
 
+    /**
+     * modifies and updated the images displayed by the buttons with respect to what is in the matrix parameter
+     * @param matrixTabPrincipal
+     */
     public void pintarTableroPrincipal(String[][] matrixTabPrincipal){
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
@@ -279,6 +286,7 @@ public class GUIGridBagLayout extends JFrame {
             cantidadFlota[posicionFlota]--;
         }
     }
+
     /**
      * show the images to choose the alignment
      */
@@ -325,7 +333,6 @@ public class GUIGridBagLayout extends JFrame {
 
     /**
      * Main process of the Java program
-     *
      * @param args Object used in order to send input data from command line when
      *             the program is execute by console.
      */
@@ -338,7 +345,6 @@ public class GUIGridBagLayout extends JFrame {
     /**
      * inner class that extends an Adapter Class or implements Listeners used by GUI class, in charge of monitoring the user's actions with the program and updating the interface and the game accordingly.
      */
-
     private class Escucha implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -481,6 +487,11 @@ public class GUIGridBagLayout extends JFrame {
                 }
             }
         }
+
+        /**
+         * Sets the position where the shot was made by the user
+         * @param disparo
+         */
         private void setDisparo(ActionEvent disparo){
             for (int i = 0; i < 10 ; i++) {
                 for (int j = 0; j < 10; j++) {
