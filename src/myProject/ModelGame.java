@@ -53,13 +53,7 @@ public class ModelGame {
      */
     private boolean posicionarflota(String[][] matrix, int posicionHorizontal, int posicionVertical, String alineacion, String barco) {
         boolean answer = false;
-        int espacio = 0;
-        switch (barco) {
-            case "portaaviones" -> espacio = 4;
-            case "submarino" -> espacio = 3;
-            case "destructor" -> espacio = 2;
-            case "fragata" -> espacio = 1;
-        }
+        int espacio = getEspacio(barco);
         //checks if the initial position (marked by the user) is empty
         if (!matrix[posicionHorizontal][posicionVertical].equals("")) {
             answer = false;
@@ -133,18 +127,6 @@ public class ModelGame {
         }
     }
 
-    private void setTableroPosicion(String[][] matrix, String opcionAPintar, int disparoX, int disparoY) {
-        /**
-         *  String informacionBarco =matrix[posicionH][posicionV];
-         *         String barcoTocado=informacionBarco.substring(0,informacionBarco.indexOf("."))+".T"+informacionBarco.substring(informacionBarco.indexOf("."));informacionBarco=barcoTocado;
-         *
-         */
-        if (opcionAPintar.equals("agua")) {
-            matrix[disparoX][disparoY] = "agua";
-        }
-    }
-
-
     /**
      * @return the matrix with the information of where the user's fleet is positioned.
      */
@@ -172,25 +154,50 @@ public class ModelGame {
         return tableroPosMaquina;
     }
 
-    private boolean hundimiento(int disparoX, int disparoY) {
+    private boolean hundimiento(String[][] matrixPosEnemigo,int disparoX, int disparoY, String[][] matrixPrinJugador) {
         boolean hundido = false;
-        String informacion = tableroPosMaquina[disparoX][disparoY];
+        String informacion = matrixPosEnemigo[disparoX][disparoY];
         String tipoBarco = informacion.substring(0, informacion.indexOf("."));
-        String tipoAlineacion = informacion.substring(informacion.indexOf(".") + 1, informacion.indexOf(".") + 2);
-
+        String tipoAlineacion = informacion.substring(informacion.indexOf(".") + 3, informacion.indexOf(".") + 4);
+        int parteBarco= Integer.valueOf(informacion.substring(informacion.lastIndexOf(".")+1));
         int espacio = getEspacio(tipoBarco);
 
         if (espacio == 1) {
-            tableroPosMaquina[disparoX][disparoY] = "hundido";
-            tableroInfPrincipalU[disparoX][disparoY] = "hundido";
+            matrixPosEnemigo[disparoX][disparoY] = "hundido";
+            matrixPrinJugador[disparoX][disparoY] = "hundido";
             hundido = true;
         } else {
+            int ultimaPos;
+            hundido = true;
+            String esteDato;
+
             if (tipoAlineacion.equals("H")) {
-                hundido = true;
+                if (parteBarco==espacio){
+                    ultimaPos=disparoX;
+                }
+                else {
+                    ultimaPos=disparoX+espacio-parteBarco;
+                }
                 for (int i = 1; i <= espacio; i++) {
-                    String esteDato = tableroPosMaquina[disparoX - espacio + i][disparoY];
-                    if (!esteDato.equals(esteDato.substring(esteDato.indexOf(".") + 1, esteDato.indexOf(".") + 2).equals("T"))) {
+                    esteDato = matrixPosEnemigo[ultimaPos - espacio + i][disparoY];
+                    if (!esteDato.substring(esteDato.indexOf(".") + 1, esteDato.indexOf(".") + 2).equals("T")) {
                         hundido = false;
+                        break;
+                    }
+                }
+            }
+            else {
+                if (parteBarco==espacio){
+                    ultimaPos=disparoY;
+                }
+                else {
+                    ultimaPos=disparoY+espacio-parteBarco;
+                }
+                for (int i = 1; i <= espacio; i++) {
+                    esteDato = matrixPosEnemigo[disparoX][ultimaPos - espacio + i];
+                    if (!esteDato.substring(esteDato.indexOf(".") + 1, esteDato.indexOf(".") + 2).equals("T")) {
+                        hundido = false;
+                        break;
                     }
                 }
             }
@@ -209,35 +216,65 @@ public class ModelGame {
         return espacio;
     }
 
-    public void setTableroInfPrincipalU(int disparoX, int disparoY){
+    public boolean setTableroInfPrincipalU(int disparoX, int disparoY){
+        boolean sePuedeDisparar=true;
         if(tableroPosMaquina[disparoX][disparoY].equals("")){
             tableroInfPrincipalU[disparoX][disparoY]="agua";
-            setTableroPosicion(tableroPosMaquina,"agua",disparoX,disparoY);
+            tableroPosMaquina[disparoX][disparoY] = "agua";
         }
         else{
             String primerClick =tableroPosMaquina[disparoX][disparoY];
             if (!primerClick.substring(primerClick.indexOf(".")+1,primerClick.indexOf(".")+2).equals("T")){
                 tableroPosMaquina[disparoX][disparoY] = primerClick.substring(0,primerClick.indexOf("."))+".T"+primerClick.substring(primerClick.indexOf("."));
-                if (hundimiento(disparoX,disparoY)){
+                primerClick =tableroPosMaquina[disparoX][disparoY];
+                if (hundimiento(tableroPosMaquina,disparoX,disparoY,tableroInfPrincipalU)){
                     String tipoBarco = primerClick.substring(0,primerClick.indexOf("."));
                     int espacio = getEspacio(tipoBarco);
-                    if (primerClick.substring(primerClick.indexOf(".") + 1, primerClick.indexOf(".") + 2).equals("H")){
+                    int ultimaPos;
+                    int parteBarco= Integer.valueOf(primerClick.substring(primerClick.lastIndexOf(".")+1));
+
+                    if (primerClick.substring(primerClick.indexOf(".") + 3, primerClick.indexOf(".") + 4).equals("H")){
+                        if (parteBarco==espacio){
+                            ultimaPos=disparoX;
+                        }else {
+                            ultimaPos=disparoX+espacio-parteBarco;
+                        }
                         for (int i = 1; i <= espacio; i++) {
-                            tableroPosMaquina[disparoX - espacio + i][disparoY]= "hundido";
+                            tableroPosMaquina[ultimaPos - espacio + i][disparoY]= "hundido";
+                            tableroInfPrincipalU[ultimaPos - espacio + i][disparoY]= "hundido";
+                        }
+                    }else {
+                        if (parteBarco==espacio){
+                            ultimaPos=disparoY;
+                        }else {
+                            ultimaPos=disparoY+espacio-parteBarco;
+                        }
+                        for (int i = 1; i <= espacio; i++) {
+                            tableroPosMaquina[disparoX][ultimaPos - espacio + i]= "hundido";
+                            tableroInfPrincipalU[disparoX][ultimaPos - espacio + i]= "hundido";
                         }
                     }
-
+                }
+                else {
+                    tableroInfPrincipalU[disparoX][disparoY]="tocado";
                 }
             }
-            
+            else{
+                sePuedeDisparar=false;
+            }
         }
+        while (!setTableroInfPrincipalM(/*con la clase machine generar el disparo aleatorimente*/));
+        return sePuedeDisparar;
+    }
 
+    //funcion responsable de los disparos de la maquina debe hacer lo mismo que su homologa setTableroInfPrincipalU
+    private boolean setTableroInfPrincipalM(/*recibe las coordenadas del disparo donde el computador va a disparar */) {
+        boolean sePuedeDisparar=true;
+        //hace exactamente lo mismo que la otra, solo que cambian las matrices, ahora se debe pero revisar en la matrix de posicion de la maquina e ir guardando la informacion en la matrix pricipal del computador
+
+        return sePuedeDisparar;
     }
-/**
-    public void setTableroInfPrincipalM(String[][] tableroInfPrincipalM) {
-        this.tableroInfPrincipalM = tableroInfPrincipalM;
-    }
-**/
+
     public String[][] getTableroInfPrincipalU() {
         return tableroInfPrincipalU;
     }
