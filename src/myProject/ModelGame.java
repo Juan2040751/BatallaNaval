@@ -53,13 +53,7 @@ public class ModelGame {
      */
     private boolean posicionarflota(String[][] matrix, int posicionHorizontal, int posicionVertical, String alineacion, String barco) {
         boolean answer = false;
-        int espacio = 0;
-        switch (barco) {
-            case "portaaviones" -> espacio = 4;
-            case "submarino" -> espacio = 3;
-            case "destructor" -> espacio = 2;
-            case "fragata" -> espacio = 1;
-        }
+        int espacio = getEspacio(barco);
         //checks if the initial position (marked by the user) is empty
         if (!matrix[posicionHorizontal][posicionVertical].equals("")) {
             answer = false;
@@ -176,8 +170,8 @@ public class ModelGame {
         boolean hundido = false;
         String informacion = tableroPosMaquina[disparoX][disparoY];
         String tipoBarco = informacion.substring(0, informacion.indexOf("."));
-        String tipoAlineacion = informacion.substring(informacion.indexOf(".") + 1, informacion.indexOf(".") + 2);
-
+        String tipoAlineacion = informacion.substring(informacion.indexOf(".") + 3, informacion.indexOf(".") + 4);
+        int parteBarco= Integer.valueOf(informacion.substring(informacion.lastIndexOf(".")+1));
         int espacio = getEspacio(tipoBarco);
 
         if (espacio == 1) {
@@ -185,11 +179,34 @@ public class ModelGame {
             tableroInfPrincipalU[disparoX][disparoY] = "hundido";
             hundido = true;
         } else {
+            int ultimaPos;
+            hundido = true;
+            String esteDato;
+
             if (tipoAlineacion.equals("H")) {
-                hundido = true;
+                if (parteBarco==espacio){
+                    ultimaPos=disparoX;
+                }
+                else {
+                    ultimaPos=disparoX+espacio-parteBarco;
+                }
                 for (int i = 1; i <= espacio; i++) {
-                    String esteDato = tableroPosMaquina[disparoX - espacio + i][disparoY];
-                    if (!esteDato.equals(esteDato.substring(esteDato.indexOf(".") + 1, esteDato.indexOf(".") + 2).equals("T"))) {
+                    esteDato = tableroPosMaquina[ultimaPos - espacio + i][disparoY];
+                    if (!esteDato.substring(esteDato.indexOf(".") + 1, esteDato.indexOf(".") + 2).equals("T")) {
+                        hundido = false;
+                    }
+                }
+            }
+            else {
+                if (parteBarco==espacio){
+                    ultimaPos=disparoY;
+                }
+                else {
+                    ultimaPos=disparoY+espacio-parteBarco;
+                }
+                for (int i = 1; i <= espacio; i++) {
+                    esteDato = tableroPosMaquina[disparoX][ultimaPos - espacio + i];
+                    if (!esteDato.substring(esteDato.indexOf(".") + 1, esteDato.indexOf(".") + 2).equals("T")) {
                         hundido = false;
                     }
                 }
@@ -218,15 +235,37 @@ public class ModelGame {
             String primerClick =tableroPosMaquina[disparoX][disparoY];
             if (!primerClick.substring(primerClick.indexOf(".")+1,primerClick.indexOf(".")+2).equals("T")){
                 tableroPosMaquina[disparoX][disparoY] = primerClick.substring(0,primerClick.indexOf("."))+".T"+primerClick.substring(primerClick.indexOf("."));
+                primerClick =tableroPosMaquina[disparoX][disparoY];
                 if (hundimiento(disparoX,disparoY)){
                     String tipoBarco = primerClick.substring(0,primerClick.indexOf("."));
                     int espacio = getEspacio(tipoBarco);
-                    if (primerClick.substring(primerClick.indexOf(".") + 1, primerClick.indexOf(".") + 2).equals("H")){
+                    int ultimaPos;
+                    int parteBarco= Integer.valueOf(primerClick.substring(primerClick.lastIndexOf(".")+1));
+
+                    if (primerClick.substring(primerClick.indexOf(".") + 3, primerClick.indexOf(".") + 4).equals("H")){
+                        if (parteBarco==espacio){
+                            ultimaPos=disparoX;
+                        }else {
+                            ultimaPos=disparoX+espacio-parteBarco;
+                        }
                         for (int i = 1; i <= espacio; i++) {
-                            tableroPosMaquina[disparoX - espacio + i][disparoY]= "hundido";
+                            tableroPosMaquina[ultimaPos - espacio + i][disparoY]= "hundido";
+                            tableroInfPrincipalU[ultimaPos - espacio + i][disparoY]= "hundido";
+                        }
+                    }else {
+                        if (parteBarco==espacio){
+                            ultimaPos=disparoY;
+                        }else {
+                            ultimaPos=disparoY+espacio-parteBarco;
+                        }
+                        for (int i = 1; i <= espacio; i++) {
+                            tableroPosMaquina[disparoX][ultimaPos - espacio + i]= "hundido";
+                            tableroInfPrincipalU[disparoX][ultimaPos - espacio + i]= "hundido";
                         }
                     }
-
+                }
+                else {
+                    tableroInfPrincipalU[disparoX][disparoY]="tocado";
                 }
             }
             
