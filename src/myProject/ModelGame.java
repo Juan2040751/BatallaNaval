@@ -1,5 +1,9 @@
 package myProject;
 
+/**
+ * This class is used to store the game information
+ * It also implements the game logic with its rules, actions and restrictions
+ */
 public class ModelGame {
     private String[][] tableroPosUsuario, tableroPosMaquina, tableroInfPrincipalU, tableroInfPrincipalM;
     private String error, ganador="";

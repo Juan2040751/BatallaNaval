@@ -2,6 +2,10 @@ package myProject;
 
 import java.util.Random;
 
+/**
+ * Implements the data for the positioning of the machine fleet
+ * Implements the movements of the machine game during the game phase
+ */
 public class Machine {
     private String[] flota;
     private int estaFlota, disparoX,disparoY;
