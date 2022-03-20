@@ -9,7 +9,7 @@ import java.awt.event.ActionListener;
  * This class is used to graph the game
  * @autor Fabian Lopez
  * @autor Juan Jose Viafara
- * @autor Willian Velasco
+ * @autor William Velasco
  * @version V.2.0.0 date 26/01/2022
  */
 public class GUIGridBagLayout extends JFrame {
@@ -367,11 +367,11 @@ public class GUIGridBagLayout extends JFrame {
                         vertical.removeActionListener(escucha);
                         ayuda.setText("Selecciona donde deseas\n posicionar tu "+tipoFlota);
                     } else {
-                        //check which of the 100 buttons was clicked
+                        /**check which of the 100 buttons was clicked*/
                         for (int i = 0; i < 10; i++) {
                             for (int j = 0; j < 10; j++) {
                                 if (tableroPosicionU[i][j] == e.getSource()) {
-                                    //once found, it is checked to see if it can be added to the underlying positions
+                                    /**once found, it is checked to see if it can be added to the underlying positions*/
                                     if (modelGame.ingresarBarcoUsuario(i, j, orientacion, tipoFlota)) {
                                         pintarTableroPosicion(modelGame.getTableroPosUsuario());
                                         if (cantidadFlota[posicionFlota] == 0) {
@@ -379,7 +379,7 @@ public class GUIGridBagLayout extends JFrame {
                                             if (posicionFlota < 4) {
                                                 pintarOpcionAlineacion();
                                             }
-                                            //when the entire fleet was positioned
+                                            /**when the entire fleet was positioned*/
                                             else {
                                                 iniciar = new JButton("Iniciar");
                                                 iniciar.addActionListener(escucha);
@@ -472,6 +472,14 @@ public class GUIGridBagLayout extends JFrame {
                     pintarTableroPosicion();
                     pintarTableroPosicion(modelGame.getTableroPosUsuario());
                 }
+
+                if(modelGame.hayGanador()){
+                    if(modelGame.getGanador() == "maquina"){
+                        JOptionPane.showMessageDialog(null,"Maquina ha ganado, (¿el juego termina?)");
+                    }else{
+                        JOptionPane.showMessageDialog(null,"Ganaste, (¿qué sigue?)");
+                    }
+                }
             }
             else if (interfaz==3){
                 if(e.getSource() == volver){
@@ -480,10 +488,19 @@ public class GUIGridBagLayout extends JFrame {
                     territorioEnemigo.setVisible(true);
                     pintarTableroPosicion();
                     pintarTableroPosicion(modelGame.getTableroPosUsuario());
+
                 }else{
                     setDisparo(e);
                     pintarTableroPosicion();
                     pintarTableroPosicion(modelGame.getTableroPosMaquina());
+                }
+
+                if(modelGame.hayGanador()){
+                    if(modelGame.getGanador() == "maquina"){
+                        JOptionPane.showMessageDialog(null,"Maquina ha ganado, (¿el juego termina?)");
+                    }else{
+                        JOptionPane.showMessageDialog(null,"Ganaste, (¿qué sigue?)");
+                    }
                 }
             }
         }
