@@ -6,7 +6,7 @@ package myProject;
  */
 public class ModelGame {
     private String[][] tableroPosUsuario, tableroPosMaquina, tableroInfPrincipalU, tableroInfPrincipalM;
-    private String error, ganador="";
+    private String error, ganador="",turno;
     private Machine machine;
     private int contadorMaquina=0, contadorUsuario=0;
 
@@ -21,7 +21,7 @@ public class ModelGame {
                 tableroPosUsuario[i][j] = "";
             }
         }
-
+        turno="";
         tableroPosMaquina = new String[10][10];
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
@@ -86,6 +86,7 @@ public class ModelGame {
                     if (!matrix[i][posicionVertical].equals("")) {
                         answer = false;
                         error = "una de las posiciones que ocuparia tu " + barco + " ya esta en uso.";
+                        break;
                     }
                     /**after having carried out all the revisions, it is verified that the boat can be added.*/
                     else if (i == posicionHorizontal + espacio - 1) {
@@ -107,6 +108,7 @@ public class ModelGame {
                     if (!matrix[posicionHorizontal][i].equals("")) {
                         answer = false;
                         error = "una de las posiciones que ocuparia tu " + barco + " ya esta en uso.";
+                        break;
                     }
                     /**after having carried out all the revisions, it is verified that the boat can be added.*/
                     else if (i == posicionVertical + espacio - 1) {
@@ -263,6 +265,7 @@ public class ModelGame {
      */
     public boolean setTableroInfPrincipalU(int disparoX, int disparoY){
         boolean sePuedeDisparar=true;
+        turno="machine";
         if(tableroPosMaquina[disparoX][disparoY].equals("")){
             tableroInfPrincipalU[disparoX][disparoY]="agua";
             tableroPosMaquina[disparoX][disparoY] = "agua";
@@ -307,16 +310,21 @@ public class ModelGame {
                 }
                 else {
                     tableroInfPrincipalU[disparoX][disparoY]="tocado";
+                    turno="usuario";
                 }
             }
             else{
                 sePuedeDisparar=false;
             }
         }
-
+        //if it is the computer's turn
         if (sePuedeDisparar){
-            setTableroInfPrincipalM(machine.getDisparoX(),machine.getDisparoY());
-            machine.prepararSiguienteDisparo(tableroInfPrincipalM);
+            System.out.println("entre if ");
+            while(turno.equals("machine")) {
+                setTableroInfPrincipalM(machine.getDisparoX(), machine.getDisparoY());
+                System.out.println("entre while");
+                machine.prepararSiguienteDisparo(tableroInfPrincipalM);
+            }
         }
 
         return sePuedeDisparar;
@@ -326,20 +334,17 @@ public class ModelGame {
      * performs computer triggering
      * @param disparoX horizontal position where the shot will be fired
      * @param disparoY vertical position where the shot will be fired
-     * @return if the shot could be fired
+     * @return if it is the user's turn
      */
-    private boolean setTableroInfPrincipalM(int disparoX, int disparoY) {
-        boolean sePuedeDisparar=true;
+    private void setTableroInfPrincipalM(int disparoX, int disparoY) {
+        turno="usuario";
         if(tableroPosUsuario[disparoX][disparoY].equals("")){
             tableroInfPrincipalM[disparoX][disparoY]="agua";
             tableroPosUsuario[disparoX][disparoY] = "agua";
         }
         else{
             String primerClick =tableroPosUsuario[disparoX][disparoY];
-            if (primerClick.substring(primerClick.indexOf(".")+1,primerClick.indexOf(".")+2).equals("T")){
-                sePuedeDisparar=false;
-            }
-            else if(!primerClick.equals("agua") && !primerClick.equals("hundido")) {
+             if(!primerClick.equals("agua") && !primerClick.equals("hundido")) {
                 tableroPosUsuario[disparoX][disparoY] = primerClick.substring(0,primerClick.indexOf("."))+".T"+primerClick.substring(primerClick.indexOf("."));
                 primerClick = tableroPosUsuario[disparoX][disparoY];
                 if (hundimiento(tableroPosUsuario,disparoX,disparoY,tableroInfPrincipalM)){
@@ -359,7 +364,8 @@ public class ModelGame {
                             tableroInfPrincipalM[ultimaPos - espacio + i][disparoY]= "hundido";
                             contadorMaquina++;
                         }
-                    }else {
+                    }
+                    else {
                         if (parteBarco==espacio){
                             ultimaPos=disparoY;
                         }else {
@@ -374,13 +380,10 @@ public class ModelGame {
                 }
                 else {
                     tableroInfPrincipalM[disparoX][disparoY]="tocado";
+                    turno="machine";
                 }
             }
-            else{
-                sePuedeDisparar=false;
-            }
         }
-        return sePuedeDisparar;
     }
 
     /**
@@ -419,4 +422,6 @@ public class ModelGame {
         }
         return ganador;
     }
+
+
 }

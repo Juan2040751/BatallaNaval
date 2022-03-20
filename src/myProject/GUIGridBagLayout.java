@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 
 /**
  * This class is used to graph the game
@@ -23,7 +24,7 @@ public class GUIGridBagLayout extends JFrame {
     private JButton horizontal, vertical, iniciar, territorioEnemigo, volver;
     private int interfaz, posicionFlota, disparoX, disparoY;
     private JButton[][] tableroPosicionU, tableroPrincipalU;
-    private JTextArea cantidadFlotas, ayuda;
+    private JTextArea cantidadFlotas, ayuda, ayudaSecundaria;
     private int[] cantidadFlota;
     private String[] nombreFlota;
     private String orientacion, tipoFlota;
@@ -66,6 +67,8 @@ public class GUIGridBagLayout extends JFrame {
 
         cantidadFlotas = new JTextArea(1, 5);
         ayuda = new JTextArea(2, 5);
+        ayudaSecundaria = new JTextArea(2, 5);
+
 
         horizontal = new JButton();
         vertical = new JButton();
@@ -391,7 +394,7 @@ public class GUIGridBagLayout extends JFrame {
                                                 panelIzquierdo.add(iniciar, constrains);
 
                                                 panelDerecho.removeAll();
-                                                ayuda.setText("Bienvenid@ a Batalla Naval\n      Presiona 'Iniciar'    ");
+                                                ayuda.setText("Bienvenid@ a Batalla Naval\n         Presiona 'Iniciar'    ");
                                                 ayuda.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
                                                 constrains.gridx = 0;
                                                 constrains.gridy = 0;
@@ -399,6 +402,24 @@ public class GUIGridBagLayout extends JFrame {
                                                 constrains.fill = GridBagConstraints.NONE;
                                                 constrains.anchor = GridBagConstraints.CENTER;
                                                 panelDerecho.add(ayuda, constrains);
+
+                                                ayudaSecundaria.setText("Tu misión es derribar los diez barcos enemigos\n" +
+                                                                        "haciendo uso del panel Derecho, cuando logres\n" +
+                                                                        "impactar pero no hundir algún barco enemigo\n" +
+                                                                        "podras volver a jugar, en cualquier otro caso\n" +
+                                                                        "Deberás esperar tu turno.\n" +
+                                                                        "Si tu contrincante impacta alguno de tus barcos\n" +
+                                                                        "también podra volver a jugar.");
+                                                ayudaSecundaria.setFont(new Font(Font.DIALOG, Font.BOLD, 15));
+                                                ayudaSecundaria.setBackground(new Color(255, 87, 51 ));
+                                                ayudaSecundaria.setEditable(false);
+                                                constrains.gridx = 0;
+                                                constrains.gridy = 1;
+                                                constrains.gridwidth =2;
+
+                                                constrains.fill = GridBagConstraints.NONE;
+                                                constrains.anchor = GridBagConstraints.CENTER;
+                                                panelDerecho.add(ayudaSecundaria, constrains);
 
                                                 interfaz = 2;
 
@@ -422,6 +443,7 @@ public class GUIGridBagLayout extends JFrame {
             else if (e.getSource() == iniciar) {
                 panelIzquierdo.remove(iniciar);
                 panelDerecho.remove(ayuda);
+                panelDerecho.remove(ayudaSecundaria);
                 headerProject.setText("Selecciona a donde apuntas tu cañones");
 
                 panelIzquierdo.setPreferredSize(new Dimension(420, 500));
@@ -439,10 +461,9 @@ public class GUIGridBagLayout extends JFrame {
                 pintarTableroPrincipal();
 
                 JButton espacio = new JButton();
-                espacio.setVisible(true);
                 espacio.setBackground(null);
-                espacio.setBorderPainted(false);
                 espacio.setPreferredSize(iniciar.getPreferredSize());
+                espacio.setBorderPainted(false);
                 constrains.gridx = 0;
                 constrains.gridy = 1;
                 constrains.gridwidth = 1;
