@@ -438,6 +438,18 @@ public class GUIGridBagLayout extends JFrame {
                 panelDerecho.add(tableroPrincipal, constrains);
                 pintarTableroPrincipal();
 
+                JButton espacio = new JButton();
+                espacio.setVisible(true);
+                espacio.setBackground(null);
+                espacio.setBorderPainted(false);
+                espacio.setPreferredSize(iniciar.getPreferredSize());
+                constrains.gridx = 0;
+                constrains.gridy = 1;
+                constrains.gridwidth = 1;
+                constrains.fill = GridBagConstraints.NONE;
+                constrains.anchor = GridBagConstraints.CENTER;
+                panelDerecho.add(espacio,constrains);
+
                 territorioEnemigo = new JButton("Ver territorio enemigo");
                 constrains.gridx = 0;
                 constrains.gridy = 1;
@@ -474,10 +486,14 @@ public class GUIGridBagLayout extends JFrame {
                 }
 
                 if(modelGame.hayGanador()){
-                    if(modelGame.getGanador() == "maquina"){
-                        JOptionPane.showMessageDialog(null,"Maquina ha ganado, (¿el juego termina?)");
+                    int respuesta;
+                    if(modelGame.getGanador().equals("maquina") ){
+                        respuesta =JOptionPane.showConfirmDialog(panelIzquierdo,"Perdiste, la Maquina ha ganado","Termino el juego",JOptionPane.DEFAULT_OPTION);
                     }else{
-                        JOptionPane.showMessageDialog(null,"Ganaste, (¿qué sigue?)");
+                        respuesta= JOptionPane.showConfirmDialog(panelDerecho,"Ganaste!!!","Termino el juego",JOptionPane.DEFAULT_OPTION);
+                    }
+                    if(respuesta==0){
+                        System.exit(0);
                     }
                 }
             }
@@ -496,10 +512,20 @@ public class GUIGridBagLayout extends JFrame {
                 }
 
                 if(modelGame.hayGanador()){
+                    int respuesta;
                     if(modelGame.getGanador() == "maquina"){
-                        JOptionPane.showMessageDialog(null,"Maquina ha ganado, (¿el juego termina?)");
+                        interfaz=2;
+                        volver.setVisible(false);
+                        territorioEnemigo.setVisible(true);
+                        pintarTableroPosicion();
+                        pintarTableroPosicion(modelGame.getTableroPosUsuario());
+
+                        respuesta= JOptionPane.showConfirmDialog(panelIzquierdo, "Perdiste, la Maquina ha ganado", "Termino el juego", JOptionPane.DEFAULT_OPTION);
                     }else{
-                        JOptionPane.showMessageDialog(null,"Ganaste, (¿qué sigue?)");
+                        respuesta= JOptionPane.showConfirmDialog(panelDerecho,"Ganaste!!!","Termino el juego",JOptionPane.DEFAULT_OPTION);
+                    }
+                    if(respuesta==0){
+                        System.exit(0);
                     }
                 }
             }

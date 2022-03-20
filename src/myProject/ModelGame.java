@@ -269,7 +269,6 @@ public class ModelGame {
                 sePuedeDisparar=false;
             }
             else if(!primerClick.equals("agua") && !primerClick.equals("hundido")){
-                System.out.println("1. "+primerClick);
                 tableroPosMaquina[disparoX][disparoY] = primerClick.substring(0,primerClick.indexOf("."))+".T"+primerClick.substring(primerClick.indexOf("."));
                 primerClick =tableroPosMaquina[disparoX][disparoY];
                 if (hundimiento(tableroPosMaquina,disparoX,disparoY,tableroInfPrincipalU)){
@@ -312,8 +311,8 @@ public class ModelGame {
         }
 
         if (sePuedeDisparar){
-            while (!setTableroInfPrincipalM(machine.getDisparoX(), machine.getDisparoY())) {
-            }
+            setTableroInfPrincipalM(machine.getDisparoX(),machine.getDisparoY());
+            machine.prepararSiguienteDisparo(tableroInfPrincipalM);
         }
 
         return sePuedeDisparar;
