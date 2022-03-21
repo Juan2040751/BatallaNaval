@@ -319,10 +319,8 @@ public class ModelGame {
         }
         //if it is the computer's turn
         if (sePuedeDisparar){
-            System.out.println("entre if ");
             while(turno.equals("machine")) {
                 setTableroInfPrincipalM(machine.getDisparoX(), machine.getDisparoY());
-                System.out.println("entre while");
                 machine.prepararSiguienteDisparo(tableroInfPrincipalM);
             }
         }

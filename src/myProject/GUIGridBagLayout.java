@@ -73,6 +73,9 @@ public class GUIGridBagLayout extends JFrame {
         horizontal = new JButton();
         vertical = new JButton();
 
+        Icon iconoUsuario = new ImageIcon(getClass().getResource("/resources/ganador/usuario.png"));
+        Icon iconoMaquina = new ImageIcon(getClass().getResource("/resources/ganador/maquina.png"));
+
         headerProject = new Header("Posiciona tu flota de barcos", new Color(30, 101, 238));
         headerProject.setPreferredSize(new Dimension(11, 40));
         constrains.gridx = 0;
@@ -491,8 +494,11 @@ public class GUIGridBagLayout extends JFrame {
                 panelIzquierdo.add(volver,constrains);
 
                 addEscucha(tableroPrincipalU);
+
             }
             else if (interfaz == 2){
+                ImageIcon iconoUsuario = new ImageIcon(getClass().getResource("/resources/ganador/usuario.png"));
+                ImageIcon iconoMaquina = new ImageIcon(getClass().getResource("/resources/ganador/maquina.png"));
                 if (e.getSource() == territorioEnemigo){
                     territorioEnemigo.setVisible(false);
                     volver.setVisible(true);
@@ -507,18 +513,18 @@ public class GUIGridBagLayout extends JFrame {
                 }
 
                 if(modelGame.hayGanador()){
-                    int respuesta;
                     if(modelGame.getGanador().equals("maquina") ){
-                        respuesta =JOptionPane.showConfirmDialog(panelIzquierdo,"Perdiste, la Maquina ha ganado","Termino el juego",JOptionPane.DEFAULT_OPTION);
+                        JOptionPane.showMessageDialog(panelIzquierdo,"Perdiste, la Maquina ha ganado","Termino el juego",JOptionPane.DEFAULT_OPTION,iconoMaquina);
+                        System.exit(0);
                     }else{
-                        respuesta= JOptionPane.showConfirmDialog(panelDerecho,"Ganaste!!!","Termino el juego",JOptionPane.DEFAULT_OPTION);
-                    }
-                    if(respuesta==0){
+                        JOptionPane.showMessageDialog(panelDerecho,"Ganaste!!!","Termino el juego",JOptionPane.DEFAULT_OPTION,iconoUsuario);
                         System.exit(0);
                     }
                 }
             }
             else if (interfaz==3){
+                ImageIcon iconoUsuario = new ImageIcon(getClass().getResource("/resources/ganador/usuario.png"));
+                ImageIcon iconoMaquina = new ImageIcon(getClass().getResource("/resources/ganador/maquina.png"));
                 if(e.getSource() == volver){
                     interfaz=2;
                     volver.setVisible(false);
@@ -533,7 +539,6 @@ public class GUIGridBagLayout extends JFrame {
                 }
 
                 if(modelGame.hayGanador()){
-                    int respuesta;
                     if(modelGame.getGanador() == "maquina"){
                         interfaz=2;
                         volver.setVisible(false);
@@ -541,11 +546,10 @@ public class GUIGridBagLayout extends JFrame {
                         pintarTableroPosicion();
                         pintarTableroPosicion(modelGame.getTableroPosUsuario());
 
-                        respuesta= JOptionPane.showConfirmDialog(panelIzquierdo, "Perdiste, la Maquina ha ganado", "Termino el juego", JOptionPane.DEFAULT_OPTION);
+                        JOptionPane.showMessageDialog(panelIzquierdo,"Perdiste, la Maquina ha ganado","Termino el juego",JOptionPane.DEFAULT_OPTION,iconoMaquina);
+                        System.exit(0);
                     }else{
-                        respuesta= JOptionPane.showConfirmDialog(panelDerecho,"Ganaste!!!","Termino el juego",JOptionPane.DEFAULT_OPTION);
-                    }
-                    if(respuesta==0){
+                        JOptionPane.showMessageDialog(panelDerecho,"Ganaste!!!","Termino el juego",JOptionPane.DEFAULT_OPTION,iconoUsuario);
                         System.exit(0);
                     }
                 }
