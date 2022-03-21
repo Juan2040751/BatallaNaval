@@ -4,12 +4,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 
 /**
  * This class is used to graph the game
  * @autor Fabian Lopez
  * @autor Juan Jose Viafara
- * @autor Willian Velasco
+ * @autor William Velasco
  * @version V.2.0.0 date 26/01/2022
  */
 public class GUIGridBagLayout extends JFrame {
@@ -23,7 +24,7 @@ public class GUIGridBagLayout extends JFrame {
     private JButton horizontal, vertical, iniciar, territorioEnemigo, volver;
     private int interfaz, posicionFlota, disparoX, disparoY;
     private JButton[][] tableroPosicionU, tableroPrincipalU;
-    private JTextArea cantidadFlotas, ayuda;
+    private JTextArea cantidadFlotas, ayuda, ayudaSecundaria;
     private int[] cantidadFlota;
     private String[] nombreFlota;
     private String orientacion, tipoFlota;
@@ -66,9 +67,14 @@ public class GUIGridBagLayout extends JFrame {
 
         cantidadFlotas = new JTextArea(1, 5);
         ayuda = new JTextArea(2, 5);
+        ayudaSecundaria = new JTextArea(2, 5);
+
 
         horizontal = new JButton();
         vertical = new JButton();
+
+        Icon iconoUsuario = new ImageIcon(getClass().getResource("/resources/ganador/usuario.png"));
+        Icon iconoMaquina = new ImageIcon(getClass().getResource("/resources/ganador/maquina.png"));
 
         headerProject = new Header("Posiciona tu flota de barcos", new Color(30, 101, 238));
         headerProject.setPreferredSize(new Dimension(11, 40));
@@ -223,6 +229,9 @@ public class GUIGridBagLayout extends JFrame {
         revalidate();
     }
 
+    /**
+     * add the 100 buttons to tableroPrincipalU for the first time, when the interface is being created
+     */
     private void pintarTableroPrincipal(){
         if(interfaz == 2){
             GridBagConstraints constrainsPosicionDerecha = new GridBagConstraints();
@@ -244,6 +253,10 @@ public class GUIGridBagLayout extends JFrame {
         }
     }
 
+    /**
+     * modifies and updated the images displayed by the buttons with respect to what is in the matrix parameter
+     * @param matrixTabPrincipal
+     */
     public void pintarTableroPrincipal(String[][] matrixTabPrincipal){
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
@@ -279,6 +292,7 @@ public class GUIGridBagLayout extends JFrame {
             cantidadFlota[posicionFlota]--;
         }
     }
+
     /**
      * show the images to choose the alignment
      */
@@ -325,7 +339,6 @@ public class GUIGridBagLayout extends JFrame {
 
     /**
      * Main process of the Java program
-     *
      * @param args Object used in order to send input data from command line when
      *             the program is execute by console.
      */
@@ -338,7 +351,6 @@ public class GUIGridBagLayout extends JFrame {
     /**
      * inner class that extends an Adapter Class or implements Listeners used by GUI class, in charge of monitoring the user's actions with the program and updating the interface and the game accordingly.
      */
-
     private class Escucha implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -361,11 +373,11 @@ public class GUIGridBagLayout extends JFrame {
                         vertical.removeActionListener(escucha);
                         ayuda.setText("Selecciona donde deseas\n posicionar tu "+tipoFlota);
                     } else {
-                        //check which of the 100 buttons was clicked
+                        /**check which of the 100 buttons was clicked*/
                         for (int i = 0; i < 10; i++) {
                             for (int j = 0; j < 10; j++) {
                                 if (tableroPosicionU[i][j] == e.getSource()) {
-                                    //once found, it is checked to see if it can be added to the underlying positions
+                                    /**once found, it is checked to see if it can be added to the underlying positions*/
                                     if (modelGame.ingresarBarcoUsuario(i, j, orientacion, tipoFlota)) {
                                         pintarTableroPosicion(modelGame.getTableroPosUsuario());
                                         if (cantidadFlota[posicionFlota] == 0) {
@@ -373,7 +385,7 @@ public class GUIGridBagLayout extends JFrame {
                                             if (posicionFlota < 4) {
                                                 pintarOpcionAlineacion();
                                             }
-                                            //when the entire fleet was positioned
+                                            /**when the entire fleet was positioned*/
                                             else {
                                                 iniciar = new JButton("Iniciar");
                                                 iniciar.addActionListener(escucha);
@@ -385,7 +397,7 @@ public class GUIGridBagLayout extends JFrame {
                                                 panelIzquierdo.add(iniciar, constrains);
 
                                                 panelDerecho.removeAll();
-                                                ayuda.setText("Bienvenid@ a Batalla Naval\n      Presiona 'Iniciar'    ");
+                                                ayuda.setText("Bienvenid@ a Batalla Naval\n         Presiona 'Iniciar'    ");
                                                 ayuda.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
                                                 constrains.gridx = 0;
                                                 constrains.gridy = 0;
@@ -393,6 +405,24 @@ public class GUIGridBagLayout extends JFrame {
                                                 constrains.fill = GridBagConstraints.NONE;
                                                 constrains.anchor = GridBagConstraints.CENTER;
                                                 panelDerecho.add(ayuda, constrains);
+
+                                                ayudaSecundaria.setText("Tu misión es derribar los diez barcos enemigos\n" +
+                                                                        "haciendo uso del panel Derecho, cuando logres\n" +
+                                                                        "impactar pero no hundir algún barco enemigo\n" +
+                                                                        "podras volver a jugar, en cualquier otro caso\n" +
+                                                                        "Deberás esperar tu turno.\n" +
+                                                                        "Si tu contrincante impacta alguno de tus barcos\n" +
+                                                                        "también podra volver a jugar.");
+                                                ayudaSecundaria.setFont(new Font(Font.DIALOG, Font.BOLD, 15));
+                                                ayudaSecundaria.setBackground(new Color(255, 87, 51 ));
+                                                ayudaSecundaria.setEditable(false);
+                                                constrains.gridx = 0;
+                                                constrains.gridy = 1;
+                                                constrains.gridwidth =2;
+
+                                                constrains.fill = GridBagConstraints.NONE;
+                                                constrains.anchor = GridBagConstraints.CENTER;
+                                                panelDerecho.add(ayudaSecundaria, constrains);
 
                                                 interfaz = 2;
 
@@ -416,6 +446,7 @@ public class GUIGridBagLayout extends JFrame {
             else if (e.getSource() == iniciar) {
                 panelIzquierdo.remove(iniciar);
                 panelDerecho.remove(ayuda);
+                panelDerecho.remove(ayudaSecundaria);
                 headerProject.setText("Selecciona a donde apuntas tu cañones");
 
                 panelIzquierdo.setPreferredSize(new Dimension(420, 500));
@@ -431,6 +462,17 @@ public class GUIGridBagLayout extends JFrame {
                 constrains.anchor = GridBagConstraints.CENTER;
                 panelDerecho.add(tableroPrincipal, constrains);
                 pintarTableroPrincipal();
+
+                JButton espacio = new JButton();
+                espacio.setBackground(null);
+                espacio.setPreferredSize(iniciar.getPreferredSize());
+                espacio.setBorderPainted(false);
+                constrains.gridx = 0;
+                constrains.gridy = 1;
+                constrains.gridwidth = 1;
+                constrains.fill = GridBagConstraints.NONE;
+                constrains.anchor = GridBagConstraints.CENTER;
+                panelDerecho.add(espacio,constrains);
 
                 territorioEnemigo = new JButton("Ver territorio enemigo");
                 constrains.gridx = 0;
@@ -452,8 +494,11 @@ public class GUIGridBagLayout extends JFrame {
                 panelIzquierdo.add(volver,constrains);
 
                 addEscucha(tableroPrincipalU);
+
             }
             else if (interfaz == 2){
+                ImageIcon iconoUsuario = new ImageIcon(getClass().getResource("/resources/ganador/usuario.png"));
+                ImageIcon iconoMaquina = new ImageIcon(getClass().getResource("/resources/ganador/maquina.png"));
                 if (e.getSource() == territorioEnemigo){
                     territorioEnemigo.setVisible(false);
                     volver.setVisible(true);
@@ -466,21 +511,55 @@ public class GUIGridBagLayout extends JFrame {
                     pintarTableroPosicion();
                     pintarTableroPosicion(modelGame.getTableroPosUsuario());
                 }
+
+                if(modelGame.hayGanador()){
+                    if(modelGame.getGanador().equals("maquina") ){
+                        JOptionPane.showMessageDialog(panelIzquierdo,"Perdiste, la Maquina ha ganado","Termino el juego",JOptionPane.DEFAULT_OPTION,iconoMaquina);
+                        System.exit(0);
+                    }else{
+                        JOptionPane.showMessageDialog(panelDerecho,"Ganaste!!!","Termino el juego",JOptionPane.DEFAULT_OPTION,iconoUsuario);
+                        System.exit(0);
+                    }
+                }
             }
             else if (interfaz==3){
+                ImageIcon iconoUsuario = new ImageIcon(getClass().getResource("/resources/ganador/usuario.png"));
+                ImageIcon iconoMaquina = new ImageIcon(getClass().getResource("/resources/ganador/maquina.png"));
                 if(e.getSource() == volver){
                     interfaz=2;
                     volver.setVisible(false);
                     territorioEnemigo.setVisible(true);
                     pintarTableroPosicion();
                     pintarTableroPosicion(modelGame.getTableroPosUsuario());
+
                 }else{
                     setDisparo(e);
                     pintarTableroPosicion();
                     pintarTableroPosicion(modelGame.getTableroPosMaquina());
                 }
+
+                if(modelGame.hayGanador()){
+                    if(modelGame.getGanador() == "maquina"){
+                        interfaz=2;
+                        volver.setVisible(false);
+                        territorioEnemigo.setVisible(true);
+                        pintarTableroPosicion();
+                        pintarTableroPosicion(modelGame.getTableroPosUsuario());
+
+                        JOptionPane.showMessageDialog(panelIzquierdo,"Perdiste, la Maquina ha ganado","Termino el juego",JOptionPane.DEFAULT_OPTION,iconoMaquina);
+                        System.exit(0);
+                    }else{
+                        JOptionPane.showMessageDialog(panelDerecho,"Ganaste!!!","Termino el juego",JOptionPane.DEFAULT_OPTION,iconoUsuario);
+                        System.exit(0);
+                    }
+                }
             }
         }
+
+        /**
+         * Sets the position where the shot was made by the user
+         * @param disparo
+         */
         private void setDisparo(ActionEvent disparo){
             for (int i = 0; i < 10 ; i++) {
                 for (int j = 0; j < 10; j++) {
